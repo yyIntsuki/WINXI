@@ -5,7 +5,12 @@ This can cause some very inaccurate delays when other applications are using thi
 - Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel
 - create a new REG_DWORD with the name **GlobalTimerResolutionRequests** and set its value to **0x00000001(1)**
 
-This should decrease the built-in Sleep() function to just a bit over 1~2ms instead. Which is a significant improvement in accuracy. There are some other ways which can improve this accuracy even further, but I will not cover it here as it didn't seem to work for me, as well as that level of accuracy is not really worth the hassle.
+This should decrease the built-in Sleep() function to just a bit over 1~2ms instead. Which is a significant improvement in accuracy.
 
-Check MeasureSleep again after rebooting your PC to see if it's in effect.
+There are some other ways which can improve this accuracy even further, by manually finding a resolution value and set it with **SetTimerResolution**. The executable should not be run directly, instead need to pass integer arguments. Check the documentation on the **TimerResolution** repo for more information.
+
+If the resolution is not affected even when done correctly in the steps. Make sure to check for processes that are enforcing any resolution value below 5000. Which usually are caused by RGB software drivers. Use `powercfg -energy` to check which process and kill the process(es) to see if it's solved.
+
+Now, fine-tune the argument to somewhat above 5000 and see which gives the most stable low sleep interval. For testing purposes, simply use task manager to kill **SetTimerResolution.exe** and launch the shortcut again. Repeat until satisfied.
+
 **Just delete the registry entry that was created if it didn't work for you.**
